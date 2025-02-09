@@ -1,24 +1,31 @@
 const jwt = require("jsonwebtoken");
 
-const isAuthenticated = async (req, res, next) => {
-  //! Get the token from the header
-  const headerObj = req.headers;
-  const token = headerObj?.authorization?.split(" ")[1];
-  //!Verify the token
-  const verifyToken = jwt.verify(token, "masynctechKey", (err, decoded) => {
-    if (err) {
-      return false;
-    } else {
-      return decoded;
+const isAuthenticated = (req, res, next) => {
+  try {
+    //! Get the token from the header
+    const token = req.headers?.authorization?.split(" ")[1];
+
+    if (!token) {
+      return res.status(401).json({ message: "No token, authorization denied" });
     }
-  });
-  if (verifyToken) {
-    //!Save the user req obj
-    req.user = verifyToken.id;
-    next();
-  } else {
-    const err = new Error("Token expired, login again");
-    next(err);
+
+    //! Verify the token
+    jwt.verify(token, "masynctechKey", (err, decoded) => {
+      if (err) {
+        if (err.name === "TokenExpiredError") {
+          return res.status(401).json({ message: "Token expired, login again" });
+        }
+        return res.status(401).json({ message: "Invalid token" });
+      }
+
+      //! Save the user in req object
+      req.user = decoded.id;
+      next();
+    });
+
+  } catch (error) {
+    console.error("Authentication Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
