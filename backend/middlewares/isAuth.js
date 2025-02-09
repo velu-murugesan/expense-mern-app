@@ -10,7 +10,7 @@ const isAuthenticated = (req, res, next) => {
     }
 
     //! Verify the token
-    jwt.verify(token, "masynctechKey", (err, decoded) => {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
         if (err.name === "TokenExpiredError") {
           return res.status(401).json({ message: "Token expired, login again" });
