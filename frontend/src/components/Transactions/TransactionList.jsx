@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { FaTrash, FaEdit } from "react-icons/fa";
-
+import moment from "moment";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { listTransactionsAPI } from "../../services/transactions/transactionService";
 import { listCategoriesAPI } from "../../services/category/categoryService";
@@ -110,7 +110,7 @@ const TransactionList = () => {
               >
                 <div>
                   <span className="font-medium text-gray-600">
-                    {new Date(transaction.date).toLocaleDateString()}
+                    {moment(transaction.date).format("DD/MM/YYYY")}
                   </span>
                   <span
                     className={`ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${

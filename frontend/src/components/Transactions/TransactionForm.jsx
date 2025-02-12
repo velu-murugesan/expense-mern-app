@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import moment from "moment";
 import {
   FaDollarSign,
   FaCalendarAlt,
@@ -56,6 +57,12 @@ const TransactionForm = () => {
     },
     validationSchema,
     onSubmit: (values) => {
+      const formattedDate = moment(values.date, "YYYY-MM-DD").toISOString(); 
+
+      const transactionData = {
+        ...values,
+        date: formattedDate, // Convert date to ISO format explicitly
+      };
       mutateAsync(values)
         .then((data) => {
           console.log(data);
@@ -166,13 +173,7 @@ const TransactionForm = () => {
         <input
           type="date"
           value={formik.values.date}
-          onChange={(e) => {
-            let selectedDate = e.target.value; // YYYY-MM-DD
-            let formattedDate = selectedDate
-              ? new Date(selectedDate).toLocaleDateString("en-GB") // DD/MM/YYYY
-              : "";
-            formik.setFieldValue("date", selectedDate); // Keep YYYY-MM-DD for form data
-          }}
+          {...formik.getFieldProps("date")}
           id="date"
           className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
         />
