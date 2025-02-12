@@ -110,7 +110,11 @@ const TransactionList = () => {
               >
                 <div>
                   <span className="font-medium text-gray-600">
-                    {new Date(transaction.date).toLocaleDateString()}
+                    {new Date(transaction.date).toLocaleDateString('en-GB', {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric'
+                    })}
                   </span>
                   <span
                     className={`ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
