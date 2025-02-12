@@ -165,7 +165,14 @@ const TransactionForm = () => {
         </label>
         <input
           type="date"
-          {...formik.getFieldProps("date")}
+          value={formik.values.date}
+          onChange={(e) => {
+            let selectedDate = e.target.value; // YYYY-MM-DD
+            let formattedDate = selectedDate
+              ? new Date(selectedDate).toLocaleDateString("en-GB") // DD/MM/YYYY
+              : "";
+            formik.setFieldValue("date", selectedDate); // Keep YYYY-MM-DD for form data
+          }}
           id="date"
           className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
         />
