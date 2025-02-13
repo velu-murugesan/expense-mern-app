@@ -30,15 +30,13 @@ const TransactionList = () => {
     queryKey: ["list-categories"],
   });
   //fetching
-  const {
-    data: transactions,
-    isError,
-    isLoading,
-    isFetched,
-    error,
-    refetch,
-  } = useQuery({
-    queryFn: () => listTransactionsAPI(filters),
+  const { data: transactions, refetch } = useQuery({
+    queryFn: () => listTransactionsAPI({
+      startDate: filters.startDate || undefined,
+      endDate: filters.endDate || undefined,
+      type: filters.type || undefined,
+      category: filters.category || "All", // Default to "All"
+    }),
     queryKey: ["list-transactions", filters],
   });
 

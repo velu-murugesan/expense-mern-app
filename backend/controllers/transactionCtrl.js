@@ -34,12 +34,10 @@ const transactionController = {
     if (type) {
       filters.type = type;
     }
-    if (category) {
-      if (category === "All") {
-        //!  No category filter needed when filtering for 'All'
-      } else if (category === "Uncategorized") {
-        //! Filter for transactions that are specifically categorized as 'Uncategorized'
-        filters.category = "Uncategorized";
+    if (category && category !== "All") {
+      if (category === "Uncategorized") {
+        // Handle case where category is missing (null or undefined)
+        filters.$or = [{ category: "Uncategorized" }, { category: { $exists: false } }];
       } else {
         filters.category = category;
       }
