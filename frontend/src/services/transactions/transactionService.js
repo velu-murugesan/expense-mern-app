@@ -9,6 +9,7 @@ const getAuthHeaders = () => {
 };
 //! Add
 export const addTransactionAPI = async ({ type, category, date, description, amount }) => {
+  console.log("oh what it is: " + getAuthHeaders());
   const response = await axios.post(
     `${BASE_URL}/transactions/create`,
     { category, date, description, amount, type },
