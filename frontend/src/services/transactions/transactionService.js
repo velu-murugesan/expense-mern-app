@@ -1,43 +1,41 @@
 import axios from "axios";
 import { BASE_URL } from "../../utils/url";
-import { getUserFromStorage } from "../../utils/getUserFromStorage";
+import getAuthHeaders from "../../utils/getAuthHeaders";
 
-//! Get the token
-const getAuthHeaders = () => {
-  const user = getUserFromStorage();
-  return user?.token ? { Authorization: `Bearer ${user.token}` } : {};
+const handleRequest = async (request) => {
+  try {
+    const response = await request();
+    return response.data;
+  } catch (error) {
+    console.error("API Request Failed:", error.response?.data || error.message);
+    throw error;
+  }
 };
-//! Add
+
+//! Add transaction
 export const addTransactionAPI = async ({ type, category, date, description, amount }) => {
-  console.log("oh what it is: " + getAuthHeaders());
-  const response = await axios.post(
-    `${BASE_URL}/transactions/create`,
-    { category, date, description, amount, type },
-    { headers: { ...getAuthHeaders() } } // Call getAuthHeaders() here
+  return handleRequest(() =>
+    axios.post(`${BASE_URL}/transactions/create`, { category, date, description, amount, type }, { headers: getAuthHeaders() })
   );
-  return response.data;
 };
-//! update
+
+//! Update category
 export const updateCategoryAPI = async ({ name, type, id }) => {
-  const response = await axios.put(
-    `${BASE_URL}/categories/update/${id}`,
-    { name, type },
-    { headers: { ...getAuthHeaders() } } // Call getAuthHeaders() here
+  return handleRequest(() =>
+    axios.put(`${BASE_URL}/categories/update/${id}`, { name, type }, { headers: getAuthHeaders() })
   );
-  return response.data;
 };
-//! delete
+
+//! Delete category
 export const deleteCategoryAPI = async (id) => {
-  const response = await axios.delete(`${BASE_URL}/categories/delete/${id}`, {
-    headers: { ...getAuthHeaders() } } // Call getAuthHeaders() here
+  return handleRequest(() =>
+    axios.delete(`${BASE_URL}/categories/delete/${id}`, { headers: getAuthHeaders() })
   );
-  return response.data;
 };
-//! lists
+
+//! List transactions
 export const listTransactionsAPI = async ({ category, type, startDate, endDate }) => {
-  const response = await axios.get(`${BASE_URL}/transactions/lists`, {
-    params: { category, endDate, startDate, type },
-    headers: { ...getAuthHeaders() } } // Call getAuthHeaders() here
+  return handleRequest(() =>
+    axios.get(`${BASE_URL}/transactions/lists`, { params: { category, endDate, startDate, type }, headers: getAuthHeaders() })
   );
-  return response.data;
 };

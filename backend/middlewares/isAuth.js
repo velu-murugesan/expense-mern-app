@@ -5,6 +5,8 @@ const isAuthenticated = (req, res, next) => {
     //! Get the token from the header
     const token = req.headers?.authorization?.split(" ")[1];
 
+    console.log("Token received in backend:", token); // Debugging
+
     if (!token) {
       return res.status(401).json({ message: "No token, authorization denied" });
     }
